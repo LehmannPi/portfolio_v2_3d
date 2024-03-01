@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { close, logo, menu } from '../assets';
 import { navLinks } from '../constants';
@@ -7,6 +8,15 @@ import { styles } from '../style';
 const Navbar = () => {
   const [active, setActive] = useState('');
   const [toggle, setToggle] = useState(false);
+  const { t, i18n } = useTranslation();
+
+  const handleLanguageChange = () => {
+    if (i18n.resolvedLanguage == 'pt') {
+      i18n.changeLanguage('us');
+    } else {
+      i18n.changeLanguage('pt');
+    }
+  };
 
   return (
     <nav
@@ -25,10 +35,18 @@ const Navbar = () => {
           <img src={logo} alt="logo" className="object-contain w-9 h-9" />
           <p className="text-white text-[18px] font-bold cursor-pointer flex">
             Filipe &nbsp;
-            <span className="hidden sm:block">| &nbsp;Front-end Developer</span>
+            <span className="hidden sm:block">
+              | &nbsp;{t('navbar.header')}
+            </span>
           </p>
         </Link>
         <ul className="flex-row hidden gap-10 list-none sm:flex">
+          <li
+            className="hover:text-white text-[18px] font-medium cursor-pointer"
+            onClick={handleLanguageChange}
+          >
+            {t('language')}
+          </li>
           {navLinks.map((nav) => (
             <li
               key={nav.id}
@@ -57,7 +75,9 @@ const Navbar = () => {
               {navLinks.map((nav) => (
                 <li
                   key={nav.id}
-                  className={`font-poppins font-medium cursor-pointer text-[16px] ${
+                  className={`${
+                    styles.fontTitle
+                  } font-medium cursor-pointer text-[16px] ${
                     active === nav.title ? 'text-white' : 'text-secondary'
                   }`}
                   onClick={() => {
